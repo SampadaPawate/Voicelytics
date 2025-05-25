@@ -14,6 +14,11 @@ import Image from "next/image";
 import Link from "next/link";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
+import {auth} from "@/firebase/client";
+import {signIn, signUp} from "@/lib/actions/auth.action";
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from "@firebase/auth";
+
+
 
 
 type FormType = "sign-in" | "sign-up";
@@ -39,12 +44,41 @@ const AuthForm = ({ type }: { type: FormType }) => {
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         try{
             if (type==='sign-up'){
+                const {name,email,password}=values;
+
+                const userCrediantials = await createUserWithEmailAndPassword(auth,email,password);
+                const result=await signUp({
+                    uid:userCrediantials.user.uid,
+                    name:name!,
+                    email,
+                    password
+                })
+
+                if(!result?.success){
+                    toast.error(result?.message);
+                    return;
+                }
+
+
                 toast.success('Account created successfully.Please sign in to continue.');
                 router.push('/sign-in');
             }else{
+                const {email,password}=values;
+                const userCrediantial = await signInWithEmailAndPassword(auth,email,password);
+
+                const idToken = await userCrediantial.user.getIdToken();
+
+                if(!idToken){
+                    toast.error('There was an error signing in');
+                    return;
+                }
+                await signIn({
+                    email,idToken
+                })
+
                 toast.success('Sign in successful.');
                 router.push('/');
             }
