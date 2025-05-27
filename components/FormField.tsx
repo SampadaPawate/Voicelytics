@@ -2,7 +2,6 @@ import React from 'react'
 import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Controller, Path, FieldValues, Control } from "react-hook-form";
-import {type} from "node:os";
 
 interface FormFieldProps<T extends FieldValues> {
     control: Control<T>;
@@ -17,7 +16,8 @@ const FormField = <T extends FieldValues>({
                                               control,
                                               name,
                                               label,
-                                              placeholder
+                                              placeholder,
+    type
                                           }: FormFieldProps<T>) => (
     <Controller
         name={name}
