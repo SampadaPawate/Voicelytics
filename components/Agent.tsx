@@ -2,15 +2,15 @@ import Image from 'next/image'
 import React from 'react'
 import {cn} from "@/lib/utils";
 
-enum CallStatus {
-    INACTIVE='INACTIVE',
-    CONNECTING='CONNECTING',
-    ACTIVE='ACTIVE',
-    FINISHED='FINISHED',
-}
+// enum CallStatus {
+//     INACTIVE='INACTIVE',
+//     CONNECTING='CONNECTING',
+//     ACTIVE='ACTIVE',
+//     FINISHED='FINISHED',
+// }
 const Agent = ({ userName }: AgentProps) => {
     const isSpeaking = true;
-    const callStatus = CallStatus.FINISHED;
+    // const callStatus = CallStatus.FINISHED;
     const messages = [
         'Whats your name?',
         'My name is John Doe,nice to meet you!'
@@ -46,21 +46,21 @@ const Agent = ({ userName }: AgentProps) => {
                 </div>
             )}
 
-            <div className="w-full flex justify-centre">
-                {callStatus !== CallStatus.ACTIVE ? (
-                    <button className="relavtive btn-call">
-                        <span className={cn('absolute animate-ping rounded-full opacity-75', callStatus !=='CONNECTING' & 'hidden')}/>
+            {/*<div className="w-full flex justify-centre">*/}
+            {/*    {callStatus !== CallStatus.ACTIVE ? (*/}
+            {/*        <button className="relative btn-call">*/}
+            {/*            <span className={cn('absolute animate-ping rounded-full opacity-75', callStatus !=='CONNECTING' & 'hidden')}/>*/}
 
-                        <span>
-                            {callStatus ==='INACTIVE'|| callStatus==='FINISHED' ? 'Call':'...'}
-                        </span>
-                    </button>
-                ):(
-                    <button className="btn-disconnect">
-                        End
-                    </button>
-                )}
-            </div>
+            {/*            <span>*/}
+            {/*                {callStatus ==='INACTIVE'|| callStatus==='FINISHED' ? 'Call':'...'}*/}
+            {/*            </span>*/}
+            {/*        </button>*/}
+            {/*    ):(*/}
+            {/*        <button className="btn-disconnect">*/}
+            {/*            End*/}
+            {/*        </button>*/}
+            {/*    )}*/}
+            {/*</div>*/}
         </>
 
     )
