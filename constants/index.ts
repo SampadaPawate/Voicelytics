@@ -1,6 +1,8 @@
-// import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
-// import { z } from "zod";
-//
+import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
+import { z } from "zod";
+
+
+
 export const mappings = {
   "react.js": "react",
   reactjs: "react",
@@ -97,64 +99,105 @@ export const mappings = {
   "aws amplify": "amplify",
 };
 
-// export const interviewer: CreateAssistantDTO = {
-//   name: "Interviewer",
-//   firstMessage:
-//     "Hello! Thank you for taking the time to speak with me today. I'm excited to learn more about you and your experience.",
-//   transcriber: {
-//     provider: "deepgram",
-//     model: "nova-2",
-//     language: "en",
-//   },
-//   voice: {
-//     provider: "11labs",
-//     voiceId: "sarah",
-//     stability: 0.4,
-//     similarityBoost: 0.8,
-//     speed: 0.9,
-//     style: 0.5,
-//     useSpeakerBoost: true,
-//   },
-//   model: {
-//     provider: "openai",
-//     model: "gpt-4",
-//     messages: [
-//       {
-//         role: "system",
-//         content: `You are a professional job interviewer conducting a real-time voice interview with a candidate. Your goal is to assess their qualifications, motivation, and fit for the role.
-//
-// Interview Guidelines:
-// Follow the structured question flow:
-// {{questions}}
-//
-// Engage naturally & react appropriately:
-// Listen actively to responses and acknowledge them before moving forward.
-// Ask brief follow-up questions if a response is vague or requires more detail.
-// Keep the conversation flowing smoothly while maintaining control.
-// Be professional, yet warm and welcoming:
-//
-// Use official yet friendly language.
-// Keep responses concise and to the point (like in a real voice interview).
-// Avoid robotic phrasing—sound natural and conversational.
-// Answer the candidate’s questions professionally:
-//
-// If asked about the role, company, or expectations, provide a clear and relevant answer.
-// If unsure, redirect the candidate to HR for more details.
-//
-// Conclude the interview properly:
-// Thank the candidate for their time.
-// Inform them that the company will reach out soon with feedback.
-// End the conversation on a polite and positive note.
-//
-//
-// - Be sure to be professional and polite.
-// - Keep all your responses short and simple. Use official language, but be kind and welcoming.
-// - This is a voice conversation, so keep your responses short, like in a real conversation. Don't ramble for too long.`,
-//       },
-//     ],
-//   },
-// };
-//
+export const feedbackSchema = z.object({
+  totalScore: z.number(),
+  categoryScores: z.tuple([
+    z.object({
+      name: z.literal("Communication Skills"),
+      score: z.number(),
+      comment: z.string(),
+    }),
+    z.object({
+      name: z.literal("Technical Knowledge"),
+      score: z.number(),
+      comment: z.string(),
+    }),
+    z.object({
+      name: z.literal("Problem Solving"),
+      score: z.number(),
+      comment: z.string(),
+    }),
+    z.object({
+      name: z.literal("Cultural Fit"),
+      score: z.number(),
+      comment: z.string(),
+    }),
+    z.object({
+      name: z.literal("Confidence and Clarity"),
+      score: z.number(),
+      comment: z.string(),
+    }),
+  ]),
+  strengths: z.array(z.string()),
+  areasForImprovement: z.array(z.string()),
+  finalAssessment: z.string(),
+});
+
+export const configureAssistant = (userName, userId, interviewId, feedbackId, type, questions,) => {
+
+  const interviewer: CreateAssistantDTO = {
+    name: "Interviewer",
+    firstMessage:
+        "Hello! Thank you for taking the time to speak with me today. I'm excited to learn more about you and your experience.{{userName}}",
+    transcriber: {
+      provider: "deepgram",
+      model: "nova-2",
+      language: "en",
+    },
+    voice: {
+      provider: "11labs",
+      voiceId: "sarah",
+      stability: 0.4,
+      similarityBoost: 0.8,
+      speed: 0.9,
+      style: 0.5,
+      useSpeakerBoost: true,
+    },
+    model: {
+      provider: "openai",
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: `You are a professional job interviewer conducting a real-time voice interview with a candidate. Your goal is to assess their qualifications, motivation, and fit for the role.
+
+Interview Guidelines:
+Follow the structured question flow:
+{{questions}}
+
+Engage naturally & react appropriately:
+Listen actively to responses and acknowledge them before moving forward.
+Ask brief follow-up questions if a response is vague or requires more detail.
+Keep the conversation flowing smoothly while maintaining control.
+Be professional, yet warm and welcoming:
+
+Use official yet friendly language.
+Keep responses concise and to the point (like in a real voice interview).
+Avoid robotic phrasing—sound natural and conversational.
+Answer the candidate’s questions professionally:
+
+If asked about the role, company, or expectations, provide a clear and relevant answer.
+If unsure, redirect the candidate to HR for more details.
+
+Conclude the interview properly:
+Thank the candidate for their time.
+Inform them that the company will reach out soon with feedback.
+End the conversation on a polite and positive note.
+
+
+- Be sure to be professional and polite.
+- Keep all your responses short and simple. Use official language, but be kind and welcoming.
+- This is a voice conversation, so keep your responses short, like in a real conversation. Don't ramble for too long.`,
+        },
+      ],
+    },
+    //@ts-expect-error
+    clientMessages : [],
+    //@ts-expect-error
+    serverMessages : [],
+  };
+  return interviewer;
+}
 // export const feedbackSchema = z.object({
 //   totalScore: z.number(),
 //   categoryScores: z.tuple([
@@ -188,7 +231,7 @@ export const mappings = {
 //   areasForImprovement: z.array(z.string()),
 //   finalAssessment: z.string(),
 // });
-//
+
 export const interviewCovers = [
   "/adobe.png",
   "/amazon.png",
@@ -228,3 +271,215 @@ export const interviewCovers = [
     createdAt: "2024-03-14T15:30:00Z",
   },
 ];
+
+
+export const generator = {
+  "name": "VOICELYTICS",
+    "nodes": [
+  {
+    "name": "start",
+    "type": "conversation",
+    "isStart": true,
+    "metadata": {
+      "position": {
+        "x": -630.2690275503625,
+        "y": -91.41780700425574
+      }
+    },
+    "prompt": "Greet the user and help them create a new AI Interviewer",
+    "model": {
+      "model": "gpt-4o",
+      "provider": "openai",
+      "maxTokens": 1000,
+      "temperature": 0.7
+    },
+    "voice": {
+      "model": "aura-2",
+      "voiceId": "thalia",
+      "provider": "deepgram"
+    },
+    "variableExtractionPlan": {
+      "output": [
+        {
+          "enum": [
+            "entry",
+            "mid",
+            "senior"
+          ],
+          "type": "string",
+          "title": "level",
+          "description": "The job experience level"
+        },
+        {
+          "enum": [],
+          "type": "number",
+          "title": "amount",
+          "description": "How many questions would you like to generate?"
+        },
+        {
+          "enum": [],
+          "type": "string",
+          "title": "techstack",
+          "description": "A list of technologies to cover during the job interview. For example, React, Next.js, Express.js, Node"
+        },
+        {
+          "enum": [],
+          "type": "string",
+          "title": "role",
+          "description": "What role should would you like to train for? For example Frontend, Backend, Fullstack, Design, UX?"
+        },
+        {
+          "enum": [],
+          "type": "string",
+          "title": "type",
+          "description": "What type of the interview should it be?"
+        }
+      ]
+    },
+    "messagePlan": {
+      "firstMessage": "Hey there!"
+    }
+  },
+  {
+    "name": "conversation_1748403867305",
+    "type": "conversation",
+    "metadata": {
+      "position": {
+        "x": -616.2080887140703,
+        "y": 288.25529559710486
+      }
+    },
+    "prompt": "Say that the Interview will be generated shortly.",
+    "model": {
+      "model": "gpt-4o",
+      "provider": "openai",
+      "maxTokens": 1000,
+      "temperature": 0.7
+    },
+    "messagePlan": {
+      "firstMessage": ""
+    }
+  },
+  {
+    "name": "apiRequest_1748404378681",
+    "type": "apiRequest",
+    "metadata": {
+      "position": {
+        "x": -616.2080887140703,
+        "y": 538.2552955971048
+      }
+    },
+    "method": "POST",
+    "url":`${process.env.NEXT_PUBLIC_BASE_URL}/api/vapi/generate`,
+    "headers": {
+      "type": "object",
+      "properties": {}
+    },
+    "body": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "value": "{{role}}",
+          "description": ""
+        },
+        "type": {
+          "type": "string",
+          "value": "{{type}}",
+          "description": ""
+        },
+        "level": {
+          "type": "string",
+          "value": "{{ level }}",
+          "description": ""
+        },
+        "amount": {
+          "type": "string",
+          "value": "{{ amount }}",
+          "description": ""
+        },
+        "userid": {
+          "type": "string",
+          "value": "{{ userid }}",
+          "description": ""
+        },
+        "techstack": {
+          "type": "string",
+          "value": "{{ techstack }}",
+          "description": ""
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {}
+    },
+    "mode": "blocking",
+    "hooks": []
+  },
+  {
+    "name": "conversation_1748405152160",
+    "type": "conversation",
+    "metadata": {
+      "position": {
+        "x": -610.0613965882694,
+        "y": 1006.2183136930933
+      }
+    },
+    "prompt": "Thank the user for the conversation and inform them that the interview has been generated successfully. ",
+    "model": {
+      "model": "gpt-4o",
+      "provider": "openai",
+      "maxTokens": 1000,
+      "temperature": 0.7
+    },
+    "messagePlan": {
+      "firstMessage": ""
+    }
+  },
+  {
+    "name": "hangup_1748405387850",
+    "type": "hangup",
+    "metadata": {
+      "position": {
+        "x": -518.0613965882694,
+        "y": 1256.2183136930933
+      }
+    }
+  }
+],
+    "edges": [
+  {
+    "from": "start",
+    "to": "conversation_1748403867305",
+    "condition": {
+      "type": "ai",
+      "prompt": "if the user provided all the required variables."
+    }
+  },
+  {
+    "from": "conversation_1748403867305",
+    "to": "apiRequest_1748404378681",
+    "condition": {
+      "type": "ai",
+      "prompt": "if the user said yes"
+    }
+  },
+  {
+    "from": "apiRequest_1748404378681",
+    "to": "conversation_1748405152160",
+    "condition": {
+      "type": "ai",
+      "prompt": ""
+    }
+  },
+  {
+    "from": "conversation_1748405152160",
+    "to": "hangup_1748405387850",
+    "condition": {
+      "type": "ai",
+      "prompt": ""
+    }
+  }
+]
+}
